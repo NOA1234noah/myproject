@@ -1,0 +1,795 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StudentsCarPoolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="AreaId" />
+          </Key>
+          <Property Name="AreaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameArea" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Child">
+          <Key>
+            <PropertyRef Name="ChildId" />
+          </Key>
+          <Property Name="ChildId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="SchoolId" Type="int" />
+        </EntityType>
+        <EntityType Name="Days">
+          <Key>
+            <PropertyRef Name="DatId" />
+          </Key>
+          <Property Name="DatId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SourceId" Type="int" />
+          <Property Name="TargetId" Type="int" />
+        </EntityType>
+        <EntityType Name="Parent">
+          <Key>
+            <PropertyRef Name="ParentId" />
+          </Key>
+          <Property Name="ParentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NumEmptyPlace" Type="int" Nullable="false" />
+          <Property Name="Adress" Type="nvarchar" MaxLength="50" />
+          <Property Name="SourceId" Type="int" />
+          <Property Name="GroupId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'StudentsCarPool.dbo.PreferabilityArea' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PreferabilityArea">
+          <Key>
+            <PropertyRef Name="preferabilityAreaId" />
+          </Key>
+          <Property Name="preferabilityAreaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="AreaId" Type="int" />
+          <Property Name="LevelPriority" Type="int" />
+        </EntityType>
+        <EntityType Name="preferabilityDay">
+          <Key>
+            <PropertyRef Name="DayPreferId" />
+          </Key>
+          <Property Name="DayPreferId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdDay" Type="int" />
+          <Property Name="LevelPriority" Type="int" />
+          <Property Name="IdParent" Type="int" />
+        </EntityType>
+        <EntityType Name="Scheduling">
+          <Key>
+            <PropertyRef Name="SchedulingId" />
+          </Key>
+          <Property Name="SchedulingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="ChildId" Type="int" />
+          <Property Name="DayId" Type="int" />
+        </EntityType>
+        <EntityType Name="School">
+          <Key>
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="SchoolId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Adress" Type="nvarchar" MaxLength="50" />
+          <Property Name="NameSchool" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AreaId" Type="int" />
+        </EntityType>
+        <Association Name="FK_Child_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="Child" Type="Self.Child" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="Child">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Child_School">
+          <End Role="School" Type="Self.School" Multiplicity="0..1" />
+          <End Role="Child" Type="Self.Child" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Child">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Group_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Group_Area1">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="TargetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Parent_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Parent" Type="Self.Parent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Parent">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Parent_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="0..1" />
+          <End Role="Parent" Type="Self.Parent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="Parent">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PreferabilityArea_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="PreferabilityArea" Type="Self.PreferabilityArea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="PreferabilityArea">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PreferabilityArea_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="PreferabilityArea" Type="Self.PreferabilityArea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="PreferabilityArea">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_preferabilityDay_Days">
+          <End Role="Days" Type="Self.Days" Multiplicity="0..1" />
+          <End Role="preferabilityDay" Type="Self.preferabilityDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="DatId" />
+            </Principal>
+            <Dependent Role="preferabilityDay">
+              <PropertyRef Name="IdDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_preferabilityDay_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="preferabilityDay" Type="Self.preferabilityDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="preferabilityDay">
+              <PropertyRef Name="IdParent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Child">
+          <End Role="Child" Type="Self.Child" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Child">
+              <PropertyRef Name="ChildId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="ChildId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Days">
+          <End Role="Days" Type="Self.Days" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="DatId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_School_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="School" Type="Self.School" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="School">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StudentsCarPoolModelStoreContainer">
+          <EntitySet Name="Area" EntityType="Self.Area" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Child" EntityType="Self.Child" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Parent" EntityType="Self.Parent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="preferabilityDay" EntityType="Self.preferabilityDay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Scheduling" EntityType="Self.Scheduling" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="School" EntityType="Self.School" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PreferabilityArea" EntityType="Self.PreferabilityArea" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PreferabilityArea].[preferabilityAreaId] AS [preferabilityAreaId], 
+    [PreferabilityArea].[ParentId] AS [ParentId], 
+    [PreferabilityArea].[AreaId] AS [AreaId], 
+    [PreferabilityArea].[LevelPriority] AS [LevelPriority]
+    FROM [dbo].[PreferabilityArea] AS [PreferabilityArea]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Child_Parent" Association="Self.FK_Child_Parent">
+            <End Role="Parent" EntitySet="Parent" />
+            <End Role="Child" EntitySet="Child" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Child_School" Association="Self.FK_Child_School">
+            <End Role="School" EntitySet="School" />
+            <End Role="Child" EntitySet="Child" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Group_Area" Association="Self.FK_Group_Area">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="Group" EntitySet="Group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Group_Area1" Association="Self.FK_Group_Area1">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="Group" EntitySet="Group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Parent_Area" Association="Self.FK_Parent_Area">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="Parent" EntitySet="Parent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Parent_Group" Association="Self.FK_Parent_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="Parent" EntitySet="Parent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PreferabilityArea_Area" Association="Self.FK_PreferabilityArea_Area">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="PreferabilityArea" EntitySet="PreferabilityArea" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PreferabilityArea_Parent" Association="Self.FK_PreferabilityArea_Parent">
+            <End Role="Parent" EntitySet="Parent" />
+            <End Role="PreferabilityArea" EntitySet="PreferabilityArea" />
+          </AssociationSet>
+          <AssociationSet Name="FK_preferabilityDay_Days" Association="Self.FK_preferabilityDay_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="preferabilityDay" EntitySet="preferabilityDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_preferabilityDay_Parent" Association="Self.FK_preferabilityDay_Parent">
+            <End Role="Parent" EntitySet="Parent" />
+            <End Role="preferabilityDay" EntitySet="preferabilityDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Child" Association="Self.FK_Scheduling_Child">
+            <End Role="Child" EntitySet="Child" />
+            <End Role="Scheduling" EntitySet="Scheduling" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Days" Association="Self.FK_Scheduling_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Scheduling" EntitySet="Scheduling" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Parent" Association="Self.FK_Scheduling_Parent">
+            <End Role="Parent" EntitySet="Parent" />
+            <End Role="Scheduling" EntitySet="Scheduling" />
+          </AssociationSet>
+          <AssociationSet Name="FK_School_Area" Association="Self.FK_School_Area">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="School" EntitySet="School" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StudentsCarPoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="AreaId" />
+          </Key>
+          <Property Name="AreaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameArea" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Groups" Relationship="Self.FK_Group_Area" FromRole="Area" ToRole="Group" />
+          <NavigationProperty Name="Groups1" Relationship="Self.FK_Group_Area1" FromRole="Area" ToRole="Group" />
+          <NavigationProperty Name="Parents" Relationship="Self.FK_Parent_Area" FromRole="Area" ToRole="Parent" />
+          <NavigationProperty Name="PreferabilityAreas" Relationship="Self.FK_PreferabilityArea_Area" FromRole="Area" ToRole="PreferabilityArea" />
+          <NavigationProperty Name="Schools" Relationship="Self.FK_School_Area" FromRole="Area" ToRole="School" />
+        </EntityType>
+        <EntityType Name="Child">
+          <Key>
+            <PropertyRef Name="ChildId" />
+          </Key>
+          <Property Name="ChildId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="SchoolId" Type="Int32" />
+          <NavigationProperty Name="Parent" Relationship="Self.FK_Child_Parent" FromRole="Child" ToRole="Parent" />
+          <NavigationProperty Name="School" Relationship="Self.FK_Child_School" FromRole="Child" ToRole="School" />
+          <NavigationProperty Name="Schedulings" Relationship="Self.FK_Scheduling_Child" FromRole="Child" ToRole="Scheduling" />
+        </EntityType>
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="DatId" />
+          </Key>
+          <Property Name="DatId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="preferabilityDays" Relationship="Self.FK_preferabilityDay_Days" FromRole="Days" ToRole="preferabilityDay" />
+          <NavigationProperty Name="Schedulings" Relationship="Self.FK_Scheduling_Days" FromRole="Days" ToRole="Scheduling" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SourceId" Type="Int32" />
+          <Property Name="TargetId" Type="Int32" />
+          <NavigationProperty Name="Area" Relationship="Self.FK_Group_Area" FromRole="Group" ToRole="Area" />
+          <NavigationProperty Name="Area1" Relationship="Self.FK_Group_Area1" FromRole="Group" ToRole="Area" />
+          <NavigationProperty Name="Parents" Relationship="Self.FK_Parent_Group" FromRole="Group" ToRole="Parent" />
+        </EntityType>
+        <EntityType Name="Parent">
+          <Key>
+            <PropertyRef Name="ParentId" />
+          </Key>
+          <Property Name="ParentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NumEmptyPlace" Type="Int32" Nullable="false" />
+          <Property Name="Adress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SourceId" Type="Int32" />
+          <Property Name="GroupId" Type="Int32" />
+          <NavigationProperty Name="Area" Relationship="Self.FK_Parent_Area" FromRole="Parent" ToRole="Area" />
+          <NavigationProperty Name="Children" Relationship="Self.FK_Child_Parent" FromRole="Parent" ToRole="Child" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_Parent_Group" FromRole="Parent" ToRole="Group" />
+          <NavigationProperty Name="PreferabilityAreas" Relationship="Self.FK_PreferabilityArea_Parent" FromRole="Parent" ToRole="PreferabilityArea" />
+          <NavigationProperty Name="preferabilityDays" Relationship="Self.FK_preferabilityDay_Parent" FromRole="Parent" ToRole="preferabilityDay" />
+          <NavigationProperty Name="Schedulings" Relationship="Self.FK_Scheduling_Parent" FromRole="Parent" ToRole="Scheduling" />
+        </EntityType>
+        <EntityType Name="preferabilityDay">
+          <Key>
+            <PropertyRef Name="DayPreferId" />
+          </Key>
+          <Property Name="DayPreferId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdDay" Type="Int32" />
+          <Property Name="LevelPriority" Type="Int32" />
+          <Property Name="IdParent" Type="Int32" />
+          <NavigationProperty Name="Day" Relationship="Self.FK_preferabilityDay_Days" FromRole="preferabilityDay" ToRole="Days" />
+          <NavigationProperty Name="Parent" Relationship="Self.FK_preferabilityDay_Parent" FromRole="preferabilityDay" ToRole="Parent" />
+        </EntityType>
+        <EntityType Name="Scheduling">
+          <Key>
+            <PropertyRef Name="SchedulingId" />
+          </Key>
+          <Property Name="SchedulingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="ChildId" Type="Int32" />
+          <Property Name="DayId" Type="Int32" />
+          <NavigationProperty Name="Child" Relationship="Self.FK_Scheduling_Child" FromRole="Scheduling" ToRole="Child" />
+          <NavigationProperty Name="Day" Relationship="Self.FK_Scheduling_Days" FromRole="Scheduling" ToRole="Days" />
+          <NavigationProperty Name="Parent" Relationship="Self.FK_Scheduling_Parent" FromRole="Scheduling" ToRole="Parent" />
+        </EntityType>
+        <EntityType Name="School">
+          <Key>
+            <PropertyRef Name="SchoolId" />
+          </Key>
+          <Property Name="SchoolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Adress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NameSchool" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AreaId" Type="Int32" />
+          <NavigationProperty Name="Area" Relationship="Self.FK_School_Area" FromRole="School" ToRole="Area" />
+          <NavigationProperty Name="Children" Relationship="Self.FK_Child_School" FromRole="School" ToRole="Child" />
+        </EntityType>
+        <EntityType Name="PreferabilityArea">
+          <Key>
+            <PropertyRef Name="preferabilityAreaId" />
+          </Key>
+          <Property Name="preferabilityAreaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="AreaId" Type="Int32" />
+          <Property Name="LevelPriority" Type="Int32" />
+          <NavigationProperty Name="Area" Relationship="Self.FK_PreferabilityArea_Area" FromRole="PreferabilityArea" ToRole="Area" />
+          <NavigationProperty Name="Parent" Relationship="Self.FK_PreferabilityArea_Parent" FromRole="PreferabilityArea" ToRole="Parent" />
+        </EntityType>
+        <Association Name="FK_Group_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Group_Area1">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="TargetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Parent_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="Parent" Type="Self.Parent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Parent">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PreferabilityArea_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="PreferabilityArea" Type="Self.PreferabilityArea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="PreferabilityArea">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_School_Area">
+          <End Role="Area" Type="Self.Area" Multiplicity="0..1" />
+          <End Role="School" Type="Self.School" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="School">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Child_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="Child" Type="Self.Child" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="Child">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Child_School">
+          <End Role="School" Type="Self.School" Multiplicity="0..1" />
+          <End Role="Child" Type="Self.Child" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="School">
+              <PropertyRef Name="SchoolId" />
+            </Principal>
+            <Dependent Role="Child">
+              <PropertyRef Name="SchoolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Child">
+          <End Role="Child" Type="Self.Child" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Child">
+              <PropertyRef Name="ChildId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="ChildId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_preferabilityDay_Days">
+          <End Role="Days" Type="Self.Day" Multiplicity="0..1" />
+          <End Role="preferabilityDay" Type="Self.preferabilityDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="DatId" />
+            </Principal>
+            <Dependent Role="preferabilityDay">
+              <PropertyRef Name="IdDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Days">
+          <End Role="Days" Type="Self.Day" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="DatId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="DayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Parent_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="0..1" />
+          <End Role="Parent" Type="Self.Parent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="Parent">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PreferabilityArea_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="PreferabilityArea" Type="Self.PreferabilityArea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="PreferabilityArea">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_preferabilityDay_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="preferabilityDay" Type="Self.preferabilityDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="preferabilityDay">
+              <PropertyRef Name="IdParent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheduling_Parent">
+          <End Role="Parent" Type="Self.Parent" Multiplicity="0..1" />
+          <End Role="Scheduling" Type="Self.Scheduling" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parent">
+              <PropertyRef Name="ParentId" />
+            </Principal>
+            <Dependent Role="Scheduling">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StudentsCarPoolEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Areas" EntityType="Self.Area" />
+          <EntitySet Name="Children" EntityType="Self.Child" />
+          <EntitySet Name="Days" EntityType="Self.Day" />
+          <EntitySet Name="Groups" EntityType="Self.Group" />
+          <EntitySet Name="Parents" EntityType="Self.Parent" />
+          <EntitySet Name="preferabilityDays" EntityType="Self.preferabilityDay" />
+          <EntitySet Name="Schedulings" EntityType="Self.Scheduling" />
+          <EntitySet Name="Schools" EntityType="Self.School" />
+          <EntitySet Name="PreferabilityAreas" EntityType="Self.PreferabilityArea" />
+          <AssociationSet Name="FK_Group_Area" Association="Self.FK_Group_Area">
+            <End Role="Area" EntitySet="Areas" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Group_Area1" Association="Self.FK_Group_Area1">
+            <End Role="Area" EntitySet="Areas" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Parent_Area" Association="Self.FK_Parent_Area">
+            <End Role="Area" EntitySet="Areas" />
+            <End Role="Parent" EntitySet="Parents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PreferabilityArea_Area" Association="Self.FK_PreferabilityArea_Area">
+            <End Role="Area" EntitySet="Areas" />
+            <End Role="PreferabilityArea" EntitySet="PreferabilityAreas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_School_Area" Association="Self.FK_School_Area">
+            <End Role="Area" EntitySet="Areas" />
+            <End Role="School" EntitySet="Schools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Child_Parent" Association="Self.FK_Child_Parent">
+            <End Role="Parent" EntitySet="Parents" />
+            <End Role="Child" EntitySet="Children" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Child_School" Association="Self.FK_Child_School">
+            <End Role="School" EntitySet="Schools" />
+            <End Role="Child" EntitySet="Children" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Child" Association="Self.FK_Scheduling_Child">
+            <End Role="Child" EntitySet="Children" />
+            <End Role="Scheduling" EntitySet="Schedulings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_preferabilityDay_Days" Association="Self.FK_preferabilityDay_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="preferabilityDay" EntitySet="preferabilityDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Days" Association="Self.FK_Scheduling_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Scheduling" EntitySet="Schedulings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Parent_Group" Association="Self.FK_Parent_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Parent" EntitySet="Parents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PreferabilityArea_Parent" Association="Self.FK_PreferabilityArea_Parent">
+            <End Role="Parent" EntitySet="Parents" />
+            <End Role="PreferabilityArea" EntitySet="PreferabilityAreas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_preferabilityDay_Parent" Association="Self.FK_preferabilityDay_Parent">
+            <End Role="Parent" EntitySet="Parents" />
+            <End Role="preferabilityDay" EntitySet="preferabilityDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheduling_Parent" Association="Self.FK_Scheduling_Parent">
+            <End Role="Parent" EntitySet="Parents" />
+            <End Role="Scheduling" EntitySet="Schedulings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StudentsCarPoolModelStoreContainer" CdmEntityContainer="StudentsCarPoolEntities1">
+          <EntitySetMapping Name="Areas">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Area">
+              <MappingFragment StoreEntitySet="Area">
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="NameArea" ColumnName="NameArea" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Children">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Child">
+              <MappingFragment StoreEntitySet="Child">
+                <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Days">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Day">
+              <MappingFragment StoreEntitySet="Days">
+                <ScalarProperty Name="DatId" ColumnName="DatId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Group">
+              <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="TargetId" ColumnName="TargetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Parents">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Parent">
+              <MappingFragment StoreEntitySet="Parent">
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="NumEmptyPlace" ColumnName="NumEmptyPlace" />
+                <ScalarProperty Name="Adress" ColumnName="Adress" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="preferabilityDays">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.preferabilityDay">
+              <MappingFragment StoreEntitySet="preferabilityDay">
+                <ScalarProperty Name="DayPreferId" ColumnName="DayPreferId" />
+                <ScalarProperty Name="IdDay" ColumnName="IdDay" />
+                <ScalarProperty Name="LevelPriority" ColumnName="LevelPriority" />
+                <ScalarProperty Name="IdParent" ColumnName="IdParent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schedulings">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.Scheduling">
+              <MappingFragment StoreEntitySet="Scheduling">
+                <ScalarProperty Name="SchedulingId" ColumnName="SchedulingId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+                <ScalarProperty Name="DayId" ColumnName="DayId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schools">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.School">
+              <MappingFragment StoreEntitySet="School">
+                <ScalarProperty Name="SchoolId" ColumnName="SchoolId" />
+                <ScalarProperty Name="Adress" ColumnName="Adress" />
+                <ScalarProperty Name="NameSchool" ColumnName="NameSchool" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PreferabilityAreas">
+            <EntityTypeMapping TypeName="StudentsCarPoolModel.PreferabilityArea">
+              <MappingFragment StoreEntitySet="PreferabilityArea">
+                <ScalarProperty Name="preferabilityAreaId" ColumnName="preferabilityAreaId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="LevelPriority" ColumnName="LevelPriority" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
